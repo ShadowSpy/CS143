@@ -2,6 +2,15 @@
 
 using namespace std;
 
+
+/*
+ * Represents an entry within a leaf node
+ */
+struct BTLeafNode::Entry {
+  RecordId rid;
+  int key;
+};
+
 /*
  * Read the content of the node from the page pid in the PageFile pf.
  * @param pid[IN] the PageId to read
@@ -26,7 +35,7 @@ RC BTLeafNode::write(PageId pid, PageFile& pf)
 
 int BTLeafNode::getMaxKeyCount()
 {
-  return (PageFile::PAGE_SIZE-sizeof(PageId))/(sizeof(int)+sizeof(RecordId));
+  return (PageFile::PAGE_SIZE-sizeof(PageId))/(sizeof(Entry));
 }
 
 /*
@@ -36,13 +45,12 @@ int BTLeafNode::getMaxKeyCount()
 int BTLeafNode::getKeyCount()
 {
   int count = 0;
-  char* key = buffer+sizeof(RecordId);
+  Entry* entry = (Entry *) buffer;
   while(count < getMaxKeyCount()) {
-    if (*((int *)key) == 0)
+    if (entry->key == 0)
       break;
-
     count++;
-    key += sizeof(RecordId)+sizeof(int);
+    entry++;
   }
   return count;
 }
@@ -54,7 +62,28 @@ int BTLeafNode::getKeyCount()
  * @return 0 if successful. Return an error code if the node is full.
  */
 RC BTLeafNode::insert(int key, const RecordId& rid)
-{ return 0; }
+{
+  int insertId;
+
+  if (getKeyCount() >= getMaxKeyCount())
+    return 1;  //Node is full
+  if (locate (key, insertId))
+    return 2;
+
+  Entry* insertEntry = (Entry *)buffer + insertId;
+  Entry* curEntry = (Entry *)buffer + getKeyCount();
+  // This loop shifts Entrys to the right so we can insert the new one
+  while (curEntry != insertEntry) {
+    Entry* nextEntry = curEntry - 1;
+    *curEntry = *nextEntry;
+    curEntry = nextEntry;
+  }
+
+  // Insert new tuple into correct space
+  insertEntry->key = key;
+  insertEntry->rid = rid;
+  return 0;
+}
 
 /*
  * Insert the (key, rid) pair to the node
@@ -73,13 +102,27 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid,
 /*
  * Find the entry whose key value is larger than or equal to searchKey
  * and output the eid (entry number) whose key value >= searchKey.
- * Remeber that all keys inside a B+tree node should be kept sorted.
+ * Remember that all keys inside a B+tree node should be kept sorted.
  * @param searchKey[IN] the key to search for
  * @param eid[OUT] the entry number that contains a key larger than or equalty to searchKey
  * @return 0 if successful. Return an error code if there is an error.
  */
 RC BTLeafNode::locate(int searchKey, int& eid)
-{ return 0; }
+{
+  eid = 0;
+  while (eid < getKeyCount()) {
+    Entry* entree = (Entry *)buffer + eid;
+    if (searchKey < entree->key)
+      eid++;
+    else
+      break;
+  }
+
+  // Make sure we haven't reached end of buffer
+  if (eid == getMaxKeyCount())
+    return 1;
+  return 0;
+}
 
 /*
  * Read the (key, rid) pair from the eid entry.
@@ -89,22 +132,37 @@ RC BTLeafNode::locate(int searchKey, int& eid)
  * @return 0 if successful. Return an error code if there is an error.
  */
 RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid)
-{ return 0; }
+{
+  if (eid < 0 || eid >= getKeyCount())
+    return 1;
+
+  Entry* entry = (Entry *)buffer + eid;
+  rid = entry->rid;
+  key = entry->key;
+  return 0;
+}
 
 /*
- * Return the pid of the next slibling node.
+ * Return the pid of the next sibling node.
  * @return the PageId of the next sibling node 
  */
 PageId BTLeafNode::getNextNodePtr()
-{ return 0; }
+{
+  PageId* pid = (PageId *)(buffer+PageFile::PAGE_SIZE) - 1;
+  return *pid;
+}
 
 /*
- * Set the pid of the next slibling node.
+ * Set the pid of the next sibling node.
  * @param pid[IN] the PageId of the next sibling node 
  * @return 0 if successful. Return an error code if there is an error.
  */
 RC BTLeafNode::setNextNodePtr(PageId pid)
-{ return 0; }
+{
+  PageId* ptr = (PageId *)(buffer+PageFile::PAGE_SIZE) - 1;
+  *ptr = pid;
+  return 0;
+}
 
 /*
  * Read the content of the node from the page pid in the PageFile pf.
