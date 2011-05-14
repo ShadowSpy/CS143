@@ -97,7 +97,41 @@ RC BTLeafNode::insert(int key, const RecordId& rid)
  */
 RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, 
                               BTLeafNode& sibling, int& siblingKey)
-{ return 0; }
+{
+  int eid;
+  int keyCount = getKeyCount();
+  siblingKey = (keyCount+1)/2;
+
+  Entry swap;
+  swap.key = key;
+  swap.rid = rid;
+
+  if (locate(key, eid))
+    return 2;
+
+  //Insert tuple before the split
+  while (eid < siblingKey) {
+    Entry* cur = (Entry *)buffer + eid;
+    Entry tmp = *cur;
+    *cur = swap;
+    swap = tmp;
+    eid++;
+  }
+
+  //Insert new tuple into sibling
+  sibling.insert(swap.key, swap.rid);
+
+  //Insert tuples after the split
+  eid = siblingKey;
+  while (eid < keyCount) {
+    Entry* cur = (Entry *)buffer + eid;
+
+    sibling.insert(cur->key, cur->rid);
+    cur->key = 0;
+    eid++;
+  }
+  return 0;
+}
 
 /*
  * Find the entry whose key value is larger than or equal to searchKey
