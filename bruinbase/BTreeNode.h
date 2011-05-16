@@ -153,7 +153,16 @@ class BTNonLeafNode {
     * @param pid[OUT] the pointer to the child node to follow.
     * @return 0 if successful. Return an error code if there is an error.
     */
-    RC locateChildPtr(int searchKey, PageId& pid);
+    RC locate(int searchKey, int& eid);
+
+   /**
+    * Read the (key, rid) pair from the eid entry.
+    * @param eid[IN] the entry number to read the (key, rid) pair from
+    * @param key[OUT] the key from the slot
+    * @param rid[OUT] the RecordId from the slot
+    * @return 0 if successful. Return an error code if there is an error.
+    */
+    RC readEntry(int eid, PageId& pid);
 
    /**
     * Initialize the root node with (pid1, key, pid2).
@@ -169,6 +178,12 @@ class BTNonLeafNode {
     * @return the number of keys in the node
     */
     int getKeyCount();
+
+   /**
+    * Return the maximum number of keys possible in the node.
+    * @return the number of keys in the node
+    */
+    int getMaxKeyCount();
 
    /**
     * Read the content of the node from the page pid in the PageFile pf.
@@ -192,6 +207,8 @@ class BTNonLeafNode {
     * that contains the node.
     */
     char buffer[PageFile::PAGE_SIZE];
+
+    struct Entry;
 }; 
 
 #endif /* BTNODE_H */
