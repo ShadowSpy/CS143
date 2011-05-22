@@ -101,9 +101,14 @@ RC BTreeIndex::insert_helper(int key, const RecordId& rid, PageId pid, int heigh
       BTLeafNode newNode;
       if (ln.insertAndSplit(key, rid, newNode, ofKey))
         return 1;
+
       ofPid = pf.endPid();
       if (newNode.write(ofPid, pf))
         return 1;
+
+      // Set new nextNode pointers
+      newNode.setNextNodePtr(ln.getNextNodePtr());
+      ln.setNextNodePtr(ofPid);
     }
     if (ln.write(pid, pf))
       return 1;
@@ -155,6 +160,17 @@ RC BTreeIndex::insert(int key, const RecordId& rid)
 {
   int ofKey;
   PageId ofPid;
+
+  //If new index, simply add a root node
+  if (treeHeight == 0)
+  {
+    BTLeafNode ln;
+    ln.insert(key, rid);
+    rootPid = pf.endPid();
+    height = 1;
+    ln.write(rootPid, pf);
+    return 0;
+  }
 
   if (insert_helper(key, rid, rootPid, 1, ofKey, ofPid))
     return 1;
@@ -237,4 +253,10 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
     cursor.pid = ln.getNextNodePtr();
     cursor.eid = 0;
   }
+
+  //Check if we have a valid page
+  if (cursor.pid <= 0 || cursor.pid >= pf.maxPid())
+    return 1;
+
+  return 0;
 }
