@@ -85,6 +85,7 @@ RC BTreeIndex::close()
  * @param height[IN] the height of the tree of node
  * @param ofKey[OUT] the new key to insert if overflow. Negative if no overflow
  * @return error code. 0 if no error
+ */
 RC BTreeIndex::insert_helper(int key, const RecordId& rid, PageId pid, int height, int& ofKey, PageId& ofPid)
 {
   ofKey = -1;
