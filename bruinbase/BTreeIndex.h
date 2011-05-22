@@ -91,6 +91,12 @@ class BTreeIndex {
   RC readForward(IndexCursor& cursor, int& key, RecordId& rid);
   
  private:
+
+  /**
+   * Recursive function for insert
+   */
+  RC insert_helper(int key, const RecordId& rid, PageId pid, int height, int& ofKey, PageId& pid);
+
   PageFile pf;         /// the PageFile used to store the actual b+tree in disk
 
   PageId   rootPid;    /// the PageId of the root node

@@ -19,6 +19,11 @@
 class BTLeafNode {
   public:
    /**
+   * Constructor for a BTLeafNode
+   */
+   BTLeafNode();
+
+   /**
     * Insert the (key, rid) pair to the node.
     * Remember that all keys inside a B+tree node should be kept sorted.
     * @param key[IN] the key to insert

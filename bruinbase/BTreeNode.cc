@@ -12,6 +12,14 @@ struct BTLeafNode::Entry {
 };
 
 /*
+ * Constructor for a BTLeafNode
+ */
+BTLeafNode::BTLeafNode()
+{
+  bzero(buffer, PageFile::PAGE_SIZE);
+}
+
+/*
  * Read the content of the node from the page pid in the PageFile pf.
  * @param pid[IN] the PageId to read
  * @param pf[IN] PageFile to read from
@@ -412,10 +420,10 @@ RC BTNonLeafNode::readEntry(int eid, PageId& pid)
  */
 RC BTNonLeafNode::initializeRoot(PageId pid1, int key, PageId pid2)
 {
-  if (getKeyCount() != 0)
-    return 1;
+  // Zero out the buffer
+  bzero(buffer, PageFile::PAGE_SIZE);
 
-  //A root entry is represented as follows:
+  // A root entry is represented as follows:
   //  One Entry node, consisting of a key and a pointer (pid2)
   //  One pointer, which is stored at the end of the buffer, but
   //  represents the pointer to nodes smaller than the key
