@@ -145,6 +145,17 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
     return 1;
   }
 
+  // Open an index file if requested
+  BTreeIndex index;
+  if (index)
+  {
+    if(index.open(table+".idx",'w'))
+    {
+      cout << "Error: Could Not Access Index" << endl;
+      return 1;
+    }
+  }
+
   string line;
   //Parse each line and append to RecordFile
   while(lf.good()) {
@@ -159,9 +170,19 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
       cout << "Warning: Could not add line to RecordFile" << endl;
       continue;
     }
+    if (index)
+    {
+      if(index.insert(key, temp))
+      {
+        cout << "Warning: Could not insert key into index" << endl;
+        continue;
+      }
+    }
   }
   rf.close();
   lf.close();
+  if (index)
+    index.close();
   return 0;
 }
 
