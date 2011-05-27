@@ -167,7 +167,7 @@ RC BTreeIndex::insert(int key, const RecordId& rid)
     BTLeafNode ln;
     ln.insert(key, rid);
     rootPid = pf.endPid();
-    height = 1;
+    treeHeight = 1;
     ln.write(rootPid, pf);
     return 0;
   }
@@ -255,7 +255,7 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
   }
 
   //Check if we have a valid page
-  if (cursor.pid <= 0 || cursor.pid >= pf.maxPid())
+  if (cursor.pid <= 0 || cursor.pid >= pf.endPid())
     return 1;
 
   return 0;
