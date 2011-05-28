@@ -167,7 +167,7 @@ RC BTLeafNode::locate(int searchKey, int& eid)
   }
 
   // Make sure we haven't reached end of buffer
-  if (eid == getMaxKeyCount()) {
+  if (eid == getKeyCount()) {
     eid = -1;
     return 1;
   }

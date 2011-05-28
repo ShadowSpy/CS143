@@ -1,0 +1,175 @@
+SELECT COUNT(*) FROM xsmall
+8
+  -- 0.000 seconds to run the select command. Read 3 pages
+
+SELECT * FROM xsmall WHERE key < 2500
+272 'Baby Take a Bow'
+1578 'G.I. Blues'
+2244 'King Creole'
+2342 'Last Ride, The'
+  -- 0.000 seconds to run the select command. Read 3 pages
+
+SELECT COUNT(*) FROM small
+50
+  -- 0.000 seconds to run the select command. Read 8 pages
+
+SELECT * FROM small WHERE key > 100 AND key < 500
+173 'Angel Levine, The'
+175 'Angel Unchained'
+272 'Baby Take a Bow'
+303 'Bananas'
+395 'Big Jake'
+489 'Blue Hawaii'
+  -- 0.000 seconds to run the select command. Read 7 pages
+
+SELECT COUNT(*) FROM medium
+100
+  -- 0.000 seconds to run the select command. Read 33 pages
+
+SELECT * FROM medium WHERE key = 489
+489 'Blue Hawaii'
+  -- 0.000 seconds to run the select command. Read 5 pages
+
+SELECT COUNT(*) FROM large
+1000
+  -- 0.000 seconds to run the select command. Read 238 pages
+
+SELECT * FROM large WHERE key > 4500
+4506 'Waterworld'
+4515 'Wedding Party, The'
+4524 'Welcome to the Dollhouse'
+4531 'Wharf Rat, The'
+4546 'When Night Is Falling'
+4558 'While You Were Sleeping'
+4560 'White Mans Burden'
+4565 'White Wolves II: Legend of the Wild'
+4570 'Who Is Harry Kellerman and Why Is He Saying Those Terrible Things About Me?'
+4579 'Widows Kiss'
+4581 'Wigstock: The Movie'
+4583 'Wild Angels, The'
+4584 'Wild Bill'
+4589 'Wild Ride, The'
+4601 'Windrunner'
+4619 'Witch Hunt'
+4620 'Witchboard III: The Possession'
+4621 'Witchcraft 7: Judgement Hour'
+4633 'Wizards of the Demon Sword'
+4637 'Wolves, The'
+4657 'Wrecking Crew, The'
+4660 'Wrong Woman, The'
+4673 'Yao a yao yao dao waipo qiao'
+4683 'Young Poisoners Handbook, The'
+4700 'Zooman'
+4710 'By Way of the Stars'
+4727 'Sabrina, the Teenage Witch'
+4732 '¡Dispara!'
+4733 'la folie'
+  -- 0.000 seconds to run the select command. Read 16 pages
+
+SELECT * FROM large WHERE key > 4500 AND key > 0
+4506 'Waterworld'
+4515 'Wedding Party, The'
+4524 'Welcome to the Dollhouse'
+4531 'Wharf Rat, The'
+4546 'When Night Is Falling'
+4558 'While You Were Sleeping'
+4560 'White Mans Burden'
+4565 'White Wolves II: Legend of the Wild'
+4570 'Who Is Harry Kellerman and Why Is He Saying Those Terrible Things About Me?'
+4579 'Widows Kiss'
+4581 'Wigstock: The Movie'
+4583 'Wild Angels, The'
+4584 'Wild Bill'
+4589 'Wild Ride, The'
+4601 'Windrunner'
+4619 'Witch Hunt'
+4620 'Witchboard III: The Possession'
+4621 'Witchcraft 7: Judgement Hour'
+4633 'Wizards of the Demon Sword'
+4637 'Wolves, The'
+4657 'Wrecking Crew, The'
+4660 'Wrong Woman, The'
+4673 'Yao a yao yao dao waipo qiao'
+4683 'Young Poisoners Handbook, The'
+4700 'Zooman'
+4710 'By Way of the Stars'
+4727 'Sabrina, the Teenage Witch'
+4732 '¡Dispara!'
+4733 'la folie'
+  -- 0.000 seconds to run the select command. Read 16 pages
+
+SELECT COUNT(*) FROM xlarge
+12278
+  -- 0.090 seconds to run the select command. Read 1656 pages
+
+SELECT * FROM xlarge WHERE key = 4240
+4240 'Tommy Boy'
+  -- 0.000 seconds to run the select command. Read 6 pages
+
+SELECT * FROM xlarge WHERE key > 400 AND key < 500 AND key > 100 AND key < 4000000
+402 'Big Squeeze, The'
+403 'Big Tease, The'
+405 'Bigfoot: The Unforgettable Encounter'
+407 'Biker Zombies'
+408 'Bikini Bistro'
+409 'Bikini Drive-In'
+410 'Bikini Hoe-Down'
+412 'Bikini Traffic School'
+413 'Billy Elliot'
+415 'Billys Holiday'
+416 'Billys Hollywood Screen Kiss'
+418 'Bio-Dome'
+420 'Bird of Prey'
+421 'Birdcage, The'
+422 'Birthday Girl'
+423 'BitterSweet'
+424 'Black and White'
+425 'Black Cat Run'
+427 'Black Day Blue Night'
+428 'Black Dog'
+430 'Black Hawk Down'
+431 'Black Knight'
+433 'Black Out'
+435 'Black Rose of Harlem'
+436 'Black Scorpion'
+437 'Black Scorpion II: Aftershock'
+439 'Black Sea 213'
+440 'Black Sheep'
+442 'Black Widow Escort'
+443 'Blackjack'
+444 'BlackMale'
+445 'Blackout, The'
+447 'Blacktop'
+448 'Blackwater Trail'
+450 'Blade'
+452 'Blair Witch Project, The'
+453 'Blast'
+454 'Blast from the Past'
+457 'Bless the Child'
+458 'Blessed Art Thou'
+459 'Blind Faith'
+460 'Blind Heat'
+462 'Bliss'
+463 'Blonde Heaven'
+464 'Blondes Have More Guns'
+465 'Blood & Donuts'
+467 'Blood and Wine'
+468 'Blood Money'
+471 'Blood of the Innocent'
+472 'Blood Oranges, The'
+474 'Blood, Guts, Bullets and Octane'
+477 'Bloodhounds'
+479 'Bloodmoon'
+480 'Bloodsport 2'
+481 'Bloody Murder'
+484 'Blow'
+485 'Blow Dry'
+486 'Blowback'
+489 'Blue Hawaii'
+490 'Blue Juice'
+491 'Blue Moon'
+492 'Blue Ridge Fall'
+493 'Blues Brothers 2000'
+496 'Bobby G. Cant Swim'
+  -- 0.000 seconds to run the select command. Read 73 pages
+

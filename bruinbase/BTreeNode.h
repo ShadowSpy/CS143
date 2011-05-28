@@ -101,6 +101,7 @@ class BTLeafNode {
     */
     RC write(PageId pid, PageFile& pf);
 
+    int getMaxKeyCount();
   private:
 
    /**
@@ -118,7 +119,6 @@ class BTLeafNode {
     * Static function which calculates the max number of keys in the
     * page
     */
-    int getMaxKeyCount();
 }; 
 
 
