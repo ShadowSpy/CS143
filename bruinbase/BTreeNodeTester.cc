@@ -3,6 +3,19 @@
 #include "PageFile.h"
 using namespace std;
 
+void printNodeContents(BTLeafNode& node)
+{
+  int key;
+  RecordId rid;
+
+  for(int eid = 0; eid < node.getKeyCount(); eid++)
+  {
+    node.readEntry(eid,key,rid);
+    cout << "Key: " << key
+         << " Rid: (" << rid.pid << "," << rid.sid << ")" << endl;
+  }
+}
+
 int main ()
 {
   PageFile pf;
@@ -17,19 +30,19 @@ int main ()
     return 1;
   }
 
-  //rid.pid = 12;
-  //rid.sid = 34;
+  rid.pid = 1;
+  rid.sid = 1;
 
-  node.read(0, pf);
-
-  cout << "# Keys: " << node.getKeyCount() << " Max Keys: " << node.getMaxKeyCount() << endl;
-
-  if (node.locate(88, eid))
+  for (int i = 0; i < 85; i++)
   {
-    cout << "Could not locate" << endl;
-    return 0;
+    node.insert(1,rid);
   }
-  node.readEntry(eid, key, rid);
 
-  cout << "Key: " << key << " Pid: " << rid.pid << " Sid: " << rid.sid << endl;
+  node.setNextNodePtr(31);
+
+  key = node.getNextNodePtr();
+
+  cout << "Next Node Ptr: " << key << endl;
+
+  printNodeContents(node); 
 }

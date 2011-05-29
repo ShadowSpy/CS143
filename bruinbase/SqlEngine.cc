@@ -91,7 +91,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
 
     // Scan the table beginning from the cursor
     count = 0;
-    while (index.readForward(cursor, key, rid))
+    while (!index.readForward(cursor, key, rid))
     {
       // read the tuple
       if ((rc = rf.read(rid, key, value)) < 0) {

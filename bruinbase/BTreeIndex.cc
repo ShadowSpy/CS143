@@ -102,13 +102,13 @@ RC BTreeIndex::insert_helper(int key, const RecordId& rid, PageId pid, int heigh
       if (ln.insertAndSplit(key, rid, newNode, ofKey))
         return 1;
 
-      ofPid = pf.endPid();
-      if (newNode.write(ofPid, pf))
-        return 1;
-
       // Set new nextNode pointers
+      ofPid = pf.endPid();
       newNode.setNextNodePtr(ln.getNextNodePtr());
       ln.setNextNodePtr(ofPid);
+
+      if (newNode.write(ofPid, pf))
+        return 1;
     }
     if (ln.write(pid, pf))
       return 1;
@@ -245,18 +245,19 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
   ln.read(cursor.pid, pf);
   ln.readEntry(cursor.eid, key, rid);
 
+  //Check if we have a valid page
+  if (cursor.pid <= 0 || cursor.pid >= pf.endPid())
+  {
+    return 1;
+  }
+
   // Increment cursor
-  if (cursor.eid < ln.getKeyCount())
-    cursor.eid++;
-  else
+  cursor.eid++;
+  if (cursor.eid >= ln.getKeyCount())
   {
     cursor.pid = ln.getNextNodePtr();
     cursor.eid = 0;
   }
-
-  //Check if we have a valid page
-  if (cursor.pid <= 0 || cursor.pid >= pf.endPid())
-    return 1;
 
   return 0;
 }

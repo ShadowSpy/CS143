@@ -13,5 +13,8 @@ SqlParser.tab.c: SqlParser.y
 BTNodeTester: BTreeNodeTester.cc BTreeNode.cc BTreeNode.h PageFile.h PageFile.cc
 	g++ -o BTNodeTester BTreeNodeTester.cc BTreeNode.cc PageFile.cc BTreeNode.h PageFile.h
 
+BTIndexTester: BTIndexTester.cc BTreeIndex.cc BTreeIndex.h BTreeNode.cc BTreeNode.h PageFile.cc PageFile.h RecordFile.h RecordFile.cc
+	g++ -o BTIndexTester BTIndexTester.cc BTreeIndex.cc BTreeIndex.h BTreeNode.cc BTreeNode.h PageFile.cc PageFile.h RecordFile.h RecordFile.cc
+
 clean:
 	rm -f bruinbase bruinbase.exe *.o *~ lex.sql.c SqlParser.tab.c SqlParser.tab.h 

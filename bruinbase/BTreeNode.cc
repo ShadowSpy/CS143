@@ -76,7 +76,7 @@ RC BTLeafNode::insert(int key, const RecordId& rid)
   if (getKeyCount() >= getMaxKeyCount())
     return 1;  //Node is full
   if (locate (key, insertId))
-    return 2;
+    insertId = getKeyCount();  //Add to end of node
 
   Entry* insertEntry = (Entry *)buffer + insertId;
   Entry* curEntry = (Entry *)buffer + getKeyCount();
@@ -152,7 +152,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid,
  * and output the eid (entry number) whose key value >= searchKey.
  * Remember that all keys inside a B+tree node should be kept sorted.
  * @param searchKey[IN] the key to search for
- * @param eid[OUT] the entry number that contains a key larger than or equalty to searchKey
+ * @param eid[OUT] the entry number that contains a key larger than or equalt to searchKey
  * @return 0 if successful. Return an error code if there is an error.
  */
 RC BTLeafNode::locate(int searchKey, int& eid)
@@ -166,7 +166,7 @@ RC BTLeafNode::locate(int searchKey, int& eid)
       break;
   }
 
-  // Make sure we haven't reached end of buffer
+  // Make sure we haven't passed the last entry
   if (eid == getKeyCount()) {
     eid = -1;
     return 1;
@@ -283,9 +283,9 @@ RC BTNonLeafNode::insert(int key, PageId pid)
   if (getKeyCount() >= getMaxKeyCount())
     return 1;  //Node is full
   if (locate (key, insertId))
-    return 2;
-
-  insertId++; // We want to insert in the slot after the located one
+    insertId = 0;  //Insert at very beginning
+  else // We want to insert in the slot after the located entry
+    insertId++;
 
   Entry* insertEntry = (Entry *)buffer + insertId;
   Entry* curEntry = (Entry *)buffer + getKeyCount();
@@ -367,10 +367,10 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
 }
 
 /*
- * Given the searchKey, find the child-node pointer to follow and
+ * Given the searchKey, find the entry number and
  * references it in eid.
  * @param searchKey[IN] the searchKey that is being looked up.
- * @param eid[OUT] the entry number with the pointer
+ * @param eid[OUT] the entry number with the pointer to follow
  * @return 0 if successful. Return an error code if there is an error.
  */
 RC BTNonLeafNode::locate(int searchKey, int& eid)
@@ -383,6 +383,8 @@ RC BTNonLeafNode::locate(int searchKey, int& eid)
     else
       break;
   }
+  if (eid == -1)
+    return 1;
 
   return 0;
 }
